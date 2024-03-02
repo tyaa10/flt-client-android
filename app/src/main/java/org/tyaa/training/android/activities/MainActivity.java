@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.tyaa.training.android.R;
 import org.tyaa.training.android.handlers.IResultHandler;
 import org.tyaa.training.android.repositories.RoleRepository;
 import org.tyaa.training.android.repositories.interfaces.IRoleRepository;
+import org.tyaa.training.android.utils.UIActionsRunner;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,12 +40,16 @@ public class MainActivity extends AppCompatActivity {
         roleRepository.getRoles(new IResultHandler<>() {
             @Override
             public void onSuccess(String result) {
-                Log.println(Log.DEBUG, "Роли", result);
+                // Log.println(Log.DEBUG, "Роли", result);
+                UIActionsRunner.run(() -> Toast.makeText(MainActivity.this, "Роли " + result, Toast.LENGTH_LONG)
+                        .show());
             }
 
             @Override
             public void onFailure(String errorMessage) {
-                Log.println(Log.ERROR, "Ошибка", errorMessage);
+                // Log.println(Log.ERROR, "Ошибка", errorMessage);
+                UIActionsRunner.run(() -> Toast.makeText(MainActivity.this, "Ошибка " + errorMessage, Toast.LENGTH_LONG)
+                        .show());
             }
         });
     }
