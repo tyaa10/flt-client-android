@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.tyaa.training.android.R;
@@ -42,10 +43,12 @@ public class MainActivity extends AppCompatActivity {
         roleRepository.getRoles(new IResultHandler<List<RoleModel>>() {
             @Override
             public void onSuccess(List<RoleModel> result) {
+                    TextView rolesJson = findViewById(R.id.rolesJson);
+                    UIActionsRunner.run(() -> rolesJson.setText(""));
                     for (int i = 0; i < result.size(); i++) {
                         final int index = i;
                         Log.println(Log.DEBUG, "Роли", String.format("Роль #%s: %s", result.get(index).id, result.get(index).name));
-                        UIActionsRunner.run(() -> Toast.makeText(MainActivity.this, result.get(index).name, Toast.LENGTH_LONG).show());
+                        UIActionsRunner.run(() -> rolesJson.append(result.get(index).name + "; "));
                     }
             }
 
