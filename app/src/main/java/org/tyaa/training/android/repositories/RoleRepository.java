@@ -6,7 +6,11 @@ import org.tyaa.training.android.R;
 import org.tyaa.training.android.actions.HttpActions;
 import org.tyaa.training.android.application.App;
 import org.tyaa.training.android.handlers.IResultHandler;
+import org.tyaa.training.android.models.RoleModel;
+import org.tyaa.training.android.parsers.JsonParser;
 import org.tyaa.training.android.repositories.interfaces.IRoleRepository;
+
+import java.util.List;
 
 /**
  * Реализация репозитория ролей, использующего сетевой источник данных, доступный по протоколу HTTP
@@ -15,7 +19,7 @@ public class RoleRepository implements IRoleRepository {
     private final HttpActions actions = new HttpActions();
 
     @Override
-    public void getRoles(IResultHandler<String> handler) {
+    public void getRoles(IResultHandler<List<RoleModel>> handler) {
         actions.doRequestForResult(
                 String.format("%s/%s",
                         App.getContext().getString(R.string.network_base_server_url),
@@ -24,7 +28,7 @@ public class RoleRepository implements IRoleRepository {
                 new IResultHandler<>() {
                     @Override
                     public void onSuccess(String result) {
-                        handler.onSuccess(result);
+                        handler.onSuccess(JsonParser.parseList(result, RoleModel.class));
                     }
 
                     @Override

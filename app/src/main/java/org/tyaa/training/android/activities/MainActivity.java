@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import org.tyaa.training.android.R;
 import org.tyaa.training.android.handlers.IResultHandler;
+import org.tyaa.training.android.models.RoleModel;
 import org.tyaa.training.android.repositories.RoleRepository;
 import org.tyaa.training.android.repositories.interfaces.IRoleRepository;
 import org.tyaa.training.android.utils.UIActionsRunner;
@@ -19,6 +20,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,19 +39,20 @@ public class MainActivity extends AppCompatActivity {
     private void showRoles() {
         // вызов метода получения всех возможных ролей пользователей
         // с дальнейшим их выводом в консоль
-        roleRepository.getRoles(new IResultHandler<>() {
+        roleRepository.getRoles(new IResultHandler<List<RoleModel>>() {
             @Override
-            public void onSuccess(String result) {
-                // Log.println(Log.DEBUG, "Роли", result);
-                UIActionsRunner.run(() -> Toast.makeText(MainActivity.this, "Роли " + result, Toast.LENGTH_LONG)
-                        .show());
+            public void onSuccess(List<RoleModel> result) {
+                    for (int i = 0; i < result.size(); i++) {
+                        final int index = i;
+                        Log.println(Log.DEBUG, "Роли", String.format("Роль #%s: %s", result.get(index).id, result.get(index).name));
+                        UIActionsRunner.run(() -> Toast.makeText(MainActivity.this, result.get(index).name, Toast.LENGTH_LONG).show());
+                    }
             }
 
             @Override
             public void onFailure(String errorMessage) {
-                // Log.println(Log.ERROR, "Ошибка", errorMessage);
-                UIActionsRunner.run(() -> Toast.makeText(MainActivity.this, "Ошибка " + errorMessage, Toast.LENGTH_LONG)
-                        .show());
+                Log.println(Log.ERROR, "Ошибка", errorMessage);
+                UIActionsRunner.run(() -> Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_LONG).show());
             }
         });
     }
